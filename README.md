@@ -2,6 +2,8 @@
 
 <br>
 
+[English](README.en.md) · **Español**
+
 # Cómo se escribe un Carb
 
 Un **Carb** es una investigación corta con cifras y fuentes. Se escribe en
@@ -73,6 +75,10 @@ la factura entera el año que deja de serlo.
 ```
 
 Eso de arriba se publica tal cual. Cópialo y cámbialo.
+
+**Los nombres de los campos van en español y se quedan en español.** `titulo`,
+`gancho`, `acento` y los demás son las claves que lee el intérprete, escribas en
+el idioma que escribas. Lo único tuyo son los valores.
 
 ## Los campos de la cabecera
 

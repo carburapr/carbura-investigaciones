@@ -2,38 +2,34 @@
 
 <br>
 
-# Cómo se escribe una investigación
+# Cómo se escribe un Carb
 
-Una investigación de Carbura es **un archivo Markdown**. No hay panel, ni base
-de datos, ni formulario. Se escribe un archivo, se manda, y sale publicado con
-sus cifras, sus gráficas y su firma.
+Un **Carb** es una investigación corta con cifras y fuentes. Se escribe en
+Markdown: una cabecera con los datos y un cuerpo con el texto. De ese archivo
+salen la nota del tablero, la página entera, los colores y las gráficas.
 
-Esta página explica el formato entero. Si prefieres copiar antes que leer, mira
-cualquiera de los que ya están en `web/content/temas/`.
+Esta página es la especificación completa. Si se la pasas a un modelo de
+lenguaje junto con tus datos, tiene todo lo que necesita para devolverte un
+archivo que se publica sin tocar nada. Está escrita para eso: **cada valor
+admitido está enumerado**, no descrito.
 
 ## Dónde va
 
-```
-content/temas/<nombre>.<idioma>.md
-```
+Hay dos formas de publicar, y las dos leen exactamente el mismo formato:
 
-El nombre es la dirección: `cafe.es.md` se publica en `/temas/cafe`. Usa
-minúsculas, sin acentos y con guiones, porque acaba en un enlace que alguien
-va a pegar en un mensaje.
+1. **Pegarlo.** En `/panel/nueva`, pulsa **En Markdown**, pega el archivo entero
+   y publica. Es lo que quieres si el archivo te lo dio otra persona o un modelo.
+2. **Campo a campo.** En la misma pantalla, con **Por campos**.
 
-El idioma es `es` o `en`. Un mismo `<nombre>` con los dos sufijos es la misma
-investigación en dos idiomas, y quien la abra recibirá la que le toque según su
-navegador. Si solo existe una, se enseña esa y la página avisa de que está en
-el otro idioma.
+Puedes ir de una a otra sin perder nada: pasar a Markdown escribe el archivo con
+lo que haya en los campos, y **Leerlo y pasar a campos** hace lo contrario.
 
-**Traducir es reescribir.** No hay ninguna obligación de que las dos versiones
-tengan las mismas frases, ni el mismo número de párrafos, ni las mismas notas al
-pie de una gráfica. Lo que sí tienen que compartir son las cifras.
+Para publicar hace falta permiso, que un administrador concede en la pestaña de
+cuentas. Los administradores lo tienen siempre.
 
-## La forma de un archivo
+## La forma del archivo
 
-Dos partes separadas por `---`: la **cabecera**, que lee la máquina para
-dibujar, y el **cuerpo**, que lee una persona.
+Dos partes separadas por `---`.
 
 ```markdown
 ---
@@ -42,65 +38,19 @@ gancho: La cosecha cayó a la décima parte mientras la importación se multipli
 seccion: Alimentos
 icono: cafe
 acento: "#2E313D"
-autor: heb
-publicado: 2026-08-08
+autor: "heb"
 portada:
   valor: "-72,4%"
   etiqueta: Producción local en una década
   nota: y sigue bajando
   sentido: baja
----
-
-En 1990 Puerto Rico cosechó 280.000 quintales de café e importó 9.378.
-```
-
-### Cabecera: lo obligatorio
-
-| Campo | Qué es |
-|---|---|
-| `titulo` | El titular. Cabe en dos líneas de una nota, así que corto. |
-| `gancho` | Una línea que dé una razón para entrar. No repitas el título. |
-| `seccion` | La familia: Alimentos, Energía, Vivienda, Comercio exterior… |
-| `acento` | El color, en hexadecimal y **entre comillas**. Sin ellas, YAML se traga el `#` como comentario y el archivo se cae. |
-| `autor` | El identificador de quien firma. Tiene que existir en `lib/autores.ts` del sitio. |
-| `publicado` | `aaaa-mm-dd`. Ordena el tablero. |
-| `portada` | La cifra que resume la investigación entera. Ver abajo. |
-
-Y uno opcional que casi siempre quieres poner:
-
-| Campo | Qué es |
-|---|---|
-| `icono` | Un nombre de [Ionicons](https://ionic.io/ionicons) relleno: `cafe`, `boat`, `flash`, `home`. Si no lo pones, sale `analytics`. |
-
-### Cifras
-
-`portada` es una cifra. `claves` es una lista de cifras, hasta cuatro, que salen
-en rejilla debajo del titular.
-
-```yaml
 claves:
   - valor: "280.000"
     etiqueta: Quintales cosechados en 1990
-    nota: la referencia de la que se viene
-  - valor: "20.000"
-    etiqueta: Quintales estimados en 2024
-    nota: menos de una décima parte
-    sentido: baja
-```
-
-`valor` va **entre comillas y ya formateado**. Escríbelo como quieres leerlo:
-`"-72,4%"`, `"$8,8 M"`, `"3.184.835"`. Nadie va a formatearlo por ti, y así el
-punto decimal es el del idioma en el que estás escribiendo.
-
-`sentido` acepta `sube`, `baja` o `llano`, y solo cambia el color. Úsalo cuando
-la dirección sea la noticia, no en todas.
-
-## Gráficas
-
-Van en `series`, y **tú eliges la forma**. Esa elección es parte del argumento,
-no un adorno que se decide luego.
-
-```yaml
+  - valor: "324.944"
+    etiqueta: Quintales importados en 2020
+    nota: eran 9.378 en 1990
+    sentido: sube
 series:
   - forma: circulo
     titulo: De dónde sale lo que se come
@@ -109,60 +59,183 @@ series:
     puntos:
       - { x: Importado, y: 87, destacado: true }
       - { x: Local, y: 13 }
-```
-
-### Las cuatro formas, y cuándo usar cada una
-
-| `forma` | Para qué sirve | Cuándo se convierte en mentira |
-|---|---|---|
-| `barras` | Comparar entre dos y seis cosas distintas. Es la que menos supone y la que sale si no pones nada. | Casi nunca. Es la opción segura. |
-| `lineas` | Una misma medida a lo largo del tiempo. | Entre categorías. Una línea de «Petróleo» a «Gas» dibuja un camino entre ellos que no existe. |
-| `area` | Igual que `lineas`, cuando lo que importa es el tamaño acumulado y no el punto exacto. | Con series que bajan a negativo: el relleno deja de significar nada. |
-| `circulo` | Un reparto de un todo. | **Cuando las partes no suman el total.** Un círculo con tres trozos de cosas sueltas miente sobre el conjunto. |
-
-`destacado: true` marca el punto que sostiene el argumento. Los demás salen más
-apagados. Si destacas todos, no has destacado ninguno.
-
-`unidad` sale bajo el título, en versalitas. `nota` va debajo del dibujo y es
-donde se dice **qué hay que mirar**, que casi nunca es evidente.
-
-## Fuentes
-
-No son opcionales. Una investigación sin fuentes es una opinión con números.
-
-```yaml
 fuentes:
   - titulo: La producción local de café ha caído 72,4% en una década
     url: https://sincomillas.com/la-produccion-local-de-cafe-ha-caido-72-4-en-una-decada/
+---
+
+En 1990 Puerto Rico cosechó 280.000 quintales de café e importó 9.378. En 2020
+cosechó 28.943 e importó 324.944.
+
+Es un ejemplo limpio de una regla incómoda: la sustitución de producción local
+por importación no cuesta nada mientras el precio de fuera es bajo, y presenta
+la factura entera el año que deja de serlo.
 ```
 
-Pon el título tal como lo publicó quien lo publicó, no un resumen tuyo.
+Eso de arriba se publica tal cual. Cópialo y cámbialo.
+
+## Los campos de la cabecera
+
+| Campo | ¿Hace falta? | Qué es |
+|---|---|---|
+| `titulo` | sí | El titular. Cabe en dos líneas de una nota, así que corto. |
+| `gancho` | sí | Una línea que dé una razón para entrar. No repitas el título. |
+| `seccion` | sí | Texto libre: Alimentos, Energía, Vivienda, Comercio exterior, Trabajo… |
+| `acento` | sí | Uno de los ocho colores de abajo, **entre comillas**. |
+| `autor` | sí | Un alias reservado, entre comillas. Ver más abajo. |
+| `icono` | no | Nombre de un Ionicon relleno. Por defecto `analytics`. |
+| `portada` | sí | La cifra que resume el Carb entero. Una sola. |
+| `claves` | no | Hasta cuatro cifras más, en rejilla. Por defecto ninguna. |
+| `series` | no | Las gráficas. Por defecto ninguna. |
+| `fuentes` | no | De dónde salen las cifras. **Pon siempre al menos una.** |
+
+`slug` e `idioma` también se aceptan en la cabecera y rellenan esos campos al
+pegar el archivo. Si no están, se eligen en la pantalla.
+
+### `acento`: solo estos ocho
+
+Cualquier otro color se rechaza al leer el archivo. **Entre comillas siempre**:
+sin ellas, YAML lee el `#` como el principio de un comentario y se traga la
+línea entera.
+
+| Valor | Nombre |
+|---|---|
+| `"#2992FF"` | Azul |
+| `"#FF6F61"` | Salmón |
+| `"#445ED9"` | Eléctrico |
+| `"#7C5CFF"` | Violeta |
+| `"#1FA97C"` | Esmeralda |
+| `"#F5A623"` | Ámbar |
+| `"#2E313D"` | Tinta |
+| `"#16171B"` | Medianoche |
+
+### `autor`: un alias reservado
+
+Tiene que ser un nombre que ya exista en la plataforma, porque la firma está
+atada a las cuentas: un Carb no puede estar firmado por alguien que no está.
+Firmas actuales: `heb`, `400`, `tornado`.
+
+Si no eres administrador, además tiene que ser **un alias tuyo**. No se puede
+publicar con el nombre de otro.
+
+### Una cifra
+
+`portada` es una. `claves` es una lista de ellas.
+
+```yaml
+valor: "-72,4%"        # obligatorio. Ya formateado, entre comillas.
+etiqueta: Producción    # obligatorio. Qué es esa cifra.
+unidad: MW              # opcional. Sale detrás de la etiqueta.
+nota: y sigue bajando   # opcional. Una línea pequeña debajo.
+sentido: baja           # opcional. sube | baja | llano.
+```
+
+`valor` es **texto y va formateado como quieres leerlo**: `"-72,4%"`, `"$8,8 M"`,
+`"3.184.835"`, `"1.456"`. Nadie lo formatea por ti, y eso es lo que deja que el
+separador decimal sea el del idioma en el que escribes.
+
+`sentido` solo cambia el color. Úsalo cuando la dirección sea la noticia.
+
+## Las gráficas
+
+Cada entrada de `series` es una gráfica. **Tú eliges la forma**, y esa elección
+es parte del argumento.
+
+```yaml
+series:
+  - forma: barras       # opcional; barras si falta
+    titulo: ...          # sale encima
+    unidad: ...          # opcional, en versalitas bajo el título
+    nota: ...            # opcional, debajo del dibujo
+    puntos:
+      - { x: Etiqueta, y: 1234, destacado: true }
+      - { x: Otra, y: 567 }
+```
+
+`x` es texto, `y` es número, `destacado` es opcional y marca el punto que
+sostiene el argumento. Si destacas todos, no has destacado ninguno.
+
+### Las cuatro formas, y cuándo cada una miente
+
+| `forma` | Para qué | Dónde se vuelve falsa |
+|---|---|---|
+| `barras` | Comparar entre dos y seis cosas distintas. La opción segura. | Casi en ningún sitio. |
+| `lineas` | Una misma medida a lo largo del tiempo. | Entre categorías. Una línea de «Petróleo» a «Gas» dibuja un camino entre ellos que no existe. |
+| `area` | Como `lineas`, cuando importa el tamaño acumulado más que cada punto. | Con series que bajan a negativo: el relleno deja de significar nada. |
+| `circulo` | Un reparto de un todo. | **Cuando las partes no suman el total.** Tres cantidades sueltas en un anillo mienten sobre el conjunto. |
+
+Antes de poner `circulo`, suma los `y`. Si no llegan al total, es `barras`.
+
+Cualquier otro valor se rechaza al leer el archivo. No se dibuja mal: no entra.
+
+## Las fuentes
+
+```yaml
+fuentes:
+  - titulo: Cómo lo tituló quien lo publicó
+    url: https://...
+```
+
+No son opcionales en la práctica. Un Carb sin fuentes es una opinión con
+números. Usa el titular original, no un resumen tuyo.
 
 ## El cuerpo
 
-Markdown normal: párrafos, `**negrita**`, listas, `## títulos`, enlaces.
-
-Los enlaces internos a otra investigación se escriben con su dirección:
+Markdown normal: párrafos, `**negrita**`, listas, `## títulos`, enlaces. Los
+enlaces a otro Carb van por su dirección:
 
 ```markdown
-Eso explica por qué [los techos de la isla](/temas/solar-techos) llevan
-una década absorbiendo casi toda la capacidad nueva.
+Eso explica por qué [los techos de la isla](/temas/solar-techos) llevan una
+década absorbiendo casi toda la capacidad nueva.
 ```
 
-Dos cosas que el sistema hace por ti y conviene saber:
+**El HTML crudo no pasa.** `<script>`, `<div>`, `<img>`: todo eso sale como
+texto. No es una limitación temporal, es la decisión: esto lo publica gente, y
+una etiqueta ajena dentro de un Markdown sería una sesión robada.
 
-**El HTML crudo no pasa.** Si escribes `<script>` o `<div>`, sale como texto.
-No es una limitación temporal: el modelo es que esto lo publique gente, y el día
-que alguien de fuera escriba, una etiqueta suya dentro de un Markdown sería una
-sesión robada.
+## Dos idiomas
 
-**Las fechas sin comillas se convierten en fechas.** `publicado: 2026-08-08`
-está bien. Si alguna vez necesitas una fecha como texto en otro campo, ponla
-entre comillas.
+Un Carb puede existir en español y en inglés. Son dos archivos con el mismo
+`slug` y distinto idioma, y **traducir es reescribir**: no hace falta que las
+frases se correspondan, ni el número de párrafos, ni las notas de una gráfica.
+Lo que sí tiene que coincidir son las cifras.
+
+Si solo existe uno, se sirve ese y la página avisa de que está en el otro idioma.
+
+## Los errores que te va a devolver
+
+Salen al pulsar **Leerlo y pasar a campos** o al publicar.
+
+| Mensaje | Qué pasó |
+|---|---|
+| No hay cabecera | Falta el bloque entre `---`. |
+| Falta en la cabecera: … | Falta uno de los cinco obligatorios. Si dice `acento` y tú lo ves puesto, es que va sin comillas y YAML se lo comió. |
+| El acento … no está en la paleta | Un color que no es uno de los ocho. |
+| Esa forma de gráfica no existe | `forma` mal escrita o inventada. |
+| No puedes firmar con un alias que no has reservado | `autor` no es tuyo y no eres administrador. |
+| No tienes permiso para publicar | Un administrador tiene que dártelo. |
+
+## Si se lo vas a pasar a un modelo
+
+Dale este archivo entero y luego tus datos. Lo que hace que funcione, y por lo
+que conviene decírselo:
+
+- **Los ocho colores y las cuatro formas están enumerados arriba.** No dejes que
+  invente ninguno de los dos.
+- **`acento` y `autor` entre comillas.** Es el fallo más frecuente.
+- **`valor` es texto ya formateado**, no un número.
+- **Que elija la forma por los datos**, y que sume los `y` antes de poner un
+  círculo.
+- **Que ponga las fuentes reales** que le diste. Si no tiene fuente para una
+  cifra, que quite la cifra, no que invente la fuente.
+
+Un aviso que vale para cualquiera, persona o modelo: este formato acepta
+cualquier número que le escribas. No comprueba que sea cierto. Lo único que
+sostiene un Carb es de dónde salieron sus cifras, y eso está en `fuentes`.
 
 ## Cómo escribir el texto
 
-Lo que separa una investigación de una ficha:
+Lo que separa un Carb de una ficha:
 
 **Empieza por el hecho, no por el contexto.** «En 1990 Puerto Rico cosechó
 280.000 quintales de café e importó 9.378» es una primera frase. «El café ha
@@ -172,47 +245,20 @@ sido históricamente importante para la economía de la isla» no lo es.
 párrafo no gana nada diciendo 87%. Gana diciendo que casi todo entra por el
 mismo muelle.
 
-**Enlaza con las otras investigaciones.** Los fletes explican el precio de la
-comida; la factura de la luz explica los techos con placas. Una cifra sola es un
-dato, y dos que se tocan son un argumento.
+**Enlaza con los otros Carbs.** Los fletes explican el precio de la comida; la
+factura de la luz explica los techos con placas. Una cifra sola es un dato; dos
+que se tocan son un argumento.
 
-**Termina en la consecuencia.** No en un resumen de lo que acabas de decir.
-
-## Antes de mandarla
-
-- El archivo se llama `<nombre>.<idioma>.md` y el nombre no lleva acentos.
-- `acento` está entre comillas.
-- Cada `valor` está formateado como se lee.
-- Cada `forma` es la que corresponde a esos datos, sobre todo si es `circulo`.
-- Hay al menos una fuente y los títulos son los de verdad.
-- El cuerpo no repite las cifras que ya salen arriba.
-
-Para verlo antes de mandarlo:
-
-```bash
-cd web && npm run dev
-```
-
-Y abre `http://localhost:3000`.
+**Termina en la consecuencia**, no en un resumen de lo que acabas de decir.
 
 ---
 
 Developed by Carbura  
 At Santurce, PR  
-Explained how an investigation is written in Markdown.
+Wrote the complete Carb format, enumerated so a model can follow it.
 
 ## Los ejemplos
 
-En `ejemplos/` hay cinco archivos reales, publicados, uno por cada forma de
-gráfica:
-
-| Archivo | Forma | Por qué esa |
-|---|---|---|
-| `poblacion.es.md` | `barras` | Tres cantidades distintas comparadas. |
-| `farmaceutica.es.md` | `circulo` | Cuatro trozos que suman el 100% de las exportaciones. |
-| `fletes.es.md` | `area` | Tres fechas de la misma medida, y lo que importa es el salto. |
-| `cafe.es.md` | `barras` | Cuatro cantidades de dos años distintos. |
-| `cafe.en.md` | — | El mismo, traducido. Compáralos: no son la misma frase dos veces. |
-
-Cópialos y cámbialos. Es más rápido que empezar de cero y evita las tres o
-cuatro trampas de YAML que están explicadas arriba.
+En `ejemplos/` hay Carbs reales, publicados, uno por cada forma de gráfica.
+Cópialos: es más rápido que empezar de cero y evita las trampas de YAML que
+están explicadas arriba.
